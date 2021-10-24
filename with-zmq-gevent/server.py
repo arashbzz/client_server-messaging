@@ -36,9 +36,13 @@ def handle_client():
             parameters = list()
             if platform.system() == 'Windows':  # if os is windows, run powershell for using variable commands from client
                 parameters.append('powershell.exe')
+            msg["parameters"].pop(-1)
             parameters.append(msg["command_name"])
             parameters.extend(msg["parameters"])
-            sending_message["given_os_command"] = parameters
+            given_command = msg["command_name"]
+            for para in msg["parameters"]:
+                given_command += f' {para}'
+            sending_message["given_os_command"] = given_command
             try:
                 result = run(parameters, capture_output=True, text=True)
                 print(result.stderr)
